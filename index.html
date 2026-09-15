@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A playful cookie clicker starter game.">
+	<title>Kermit Clicker</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<header class="site-header">
+		<div class="brand"><span class="brand-mark">🍪</span> Kermit Clicker</div>
+		<button class="header-button" type="button" data-action="reset">New game</button>
+	</header>
+
+	<main class="game-layout">
+		<section aria-labelledby="game-title">
+			<div class="intro">
+				<p class="eyebrow">A tiny web game starter</p>
+				<h1 id="game-title">Bake your way to the top.</h1>
+				<p class="intro-copy">Click the cookie, collect crumbs, and buy upgrades. This is a simple foundation you can expand with new characters, sounds, achievements, and more.</p>
+			</div>
+
+			<div class="click-zone">
+				<button class="cookie-button" type="button" data-action="click-cookie" aria-label="Click the cookie to earn cookies">
+					<span class="cookie-label">Click me</span>
+				</button>
+			</div>
+		</section>
+
+		<aside class="score-panel" aria-label="Game status">
+			<div>
+				<p class="score-heading">Cookies baked</p>
+				<p class="score" data-display="score">0</p>
+				<div class="stats">
+					<div class="stat"><span class="stat-label">Per click</span><span class="stat-value" data-display="per-click">1</span></div>
+					<div class="stat"><span class="stat-label">Per second</span><span class="stat-value" data-display="per-second">0</span></div>
+				</div>
+			</div>
+
+			<div>
+				<h2 class="upgrade-title">Upgrades <span data-display="upgrade-count">0</span></h2>
+				<div class="upgrade-list" data-display="upgrades"></div>
+			</div>
+
+			<div></div>
+			<button class="reset-button" type="button" data-action="reset">Reset progress</button>
+		</aside>
+	</main>
+	<script src="Script.js"></script>
+</body>
+</html>
