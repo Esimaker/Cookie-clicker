@@ -266,8 +266,10 @@
 				this.upgrades.forEach((upgrade, index) => {
 					const button = document.createElement('button');
 					const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'mister.webp'];
+					const upgradeColors = ['blue', 'red', 'green'];
 					button.type = 'button';
 					button.className = 'upgrade';
+					button.dataset.upgradeColor = upgradeColors[index];
 					button.dataset.action = 'buy-upgrade';
 					button.dataset.upgradeIndex = index;
 					button.disabled = upgrade.purchased || !this.cookie.canAfford(upgrade.cost);
