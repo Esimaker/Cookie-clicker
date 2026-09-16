@@ -8,8 +8,29 @@
 	--yellow: #459230;
 	--line: #e8dcc2;
 	--shadow: 0 18px 45px rgba(72, 62, 35, 0.12);
+	--panel: rgba(255, 253, 247, 0.7);
+	--soft: #f5f0e2;
 }
 
+body.dark-mode {
+	--ink: #eef7ef;
+	--muted: #a9bcae;
+	--cream: #121a15;
+	--paper: #1b271f;
+	--green: #82c991;
+	--dark-green: #9ce0a9;
+	--yellow: #6aa94f;
+	--line: #334638;
+	--panel: rgba(27, 39, 31, 0.82);
+	--soft: #26372b;
+	--shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+	background:
+		radial-gradient(circle at 12% 10%, rgba(106, 169, 79, 0.18), transparent 28%),
+		radial-gradient(circle at 90% 18%, rgba(130, 201, 145, 0.12), transparent 24%),
+		var(--cream);
+}
+
+/* Base layout */
 * {
 	box-sizing: border-box;
 }
@@ -40,6 +61,12 @@ button {
 	padding: 26px 28px;
 }
 
+/* Header controls */
+.header-actions {
+	display: flex;
+	gap: 8px;
+}
+
 .brand {
 	display: flex;
 	align-items: center;
@@ -66,8 +93,12 @@ button {
 	border: 1px solid var(--line);
 	border-radius: 999px;
 	padding: 10px 16px;
-	background: rgba(255, 253, 247, 0.72);
+	background: var(--panel);
 	font-size: 0.9rem;
+}
+
+.header-button:hover {
+	border-color: var(--green);
 }
 
 .game-layout {
@@ -79,44 +110,24 @@ button {
 	padding: 34px 28px 54px;
 }
 
-.intro {
-	max-width: 680px;
-	margin-bottom: 28px;
-}
-
-.eyebrow {
-	margin: 0 0 10px;
-	color: var(--dark-green);
-	font-size: 0.8rem;
-	font-weight: bold;
-	letter-spacing: 0.18em;
-	text-transform: uppercase;
-}
-
-h1 {
-	max-width: 600px;
-	margin: 0;
-	font-size: clamp(3rem, 7vw, 6.4rem);
-	line-height: 0.88;
-	letter-spacing: -0.05em;
-}
-
-.intro-copy {
-	max-width: 500px;
-	margin: 24px 0 0;
-	color: var(--muted);
-	font-size: 1.08rem;
-	line-height: 1.6;
-}
-
 .click-zone {
 	display: grid;
-	min-height: 430px;
+	min-height: 600px;
 	place-items: center;
 	border: 1px solid var(--line);
 	border-radius: 28px;
-	background: rgba(255, 253, 247, 0.7);
+	background: var(--panel);
 	box-shadow: var(--shadow);
+}
+
+/* Kermit button */
+.click-prompt {
+	align-self: end;
+	margin: 0;
+	color: var(--dark-green);
+	font-size: 1.4rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
 }
 
 .cookie-button {
@@ -131,14 +142,6 @@ h1 {
 	background: #5e9f6f url('images (1) (1).webp') center / contain no-repeat;
 	box-shadow: inset 0 -18px 0 rgba(39, 77, 35, 0.18), 0 20px 0 #2452b8, 0 30px 30px rgba(38, 69, 45, 0.22);
 	transition: transform 120ms ease, box-shadow 120ms ease;
-}
-
-.cookie-button::after {
-	position: absolute;
-	inset: 18%;
-	border: 2px dashed rgba(232, 255, 232, 0.68);
-	border-radius: 50%;
-	content: '';
 }
 
 .cookie-button.is-clicking {
@@ -161,16 +164,6 @@ h1 {
 	box-shadow: inset 0 -12px 0 rgba(123, 74, 34, 0.14), 0 10px 0 #b77d36, 0 20px 20px rgba(89, 61, 27, 0.16);
 }
 
-.cookie-label {
-	z-index: 1;
-	color: #fff8e8;
-	font-size: 1.2rem;
-	font-weight: bold;
-	letter-spacing: 0.12em;
-	text-shadow: 0 2px 3px rgba(73, 42, 17, 0.38);
-	text-transform: uppercase;
-}
-
 .score-panel {
 	display: grid;
 	grid-template-rows: auto auto 1fr auto;
@@ -182,6 +175,7 @@ h1 {
 	box-shadow: var(--shadow);
 }
 
+/* Upgrades */
 .score-heading {
 	margin: 0;
 	color: var(--muted);
@@ -207,7 +201,7 @@ h1 {
 .stat {
 	padding: 14px;
 	border-radius: 14px;
-	background: #f5f0e2;
+	background: var(--soft);
 }
 
 .stat-label {
@@ -255,6 +249,10 @@ h1 {
 	background: #f4faef;
 }
 
+body.dark-mode .upgrade:hover:not(:disabled) {
+	background: #2a4030;
+}
+
 .upgrade:disabled {
 	cursor: not-allowed;
 	opacity: 0.5;
@@ -278,6 +276,12 @@ h1 {
 	font-size: 1.2rem;
 	overflow: hidden;
 	flex-shrink: 0;
+	box-shadow: 0 7px 0 rgba(41, 68, 47, 0.18), 0 11px 16px rgba(41, 68, 47, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+	transform: translateY(-2px);
+}
+
+body.dark-mode .upgrade-icon {
+	background: #314836;
 }
 
 .upgrade-image {
@@ -286,7 +290,8 @@ h1 {
 	height: 118%;
 	object-fit: cover;
 	object-position: center;
-	transform: scale(1.08);
+	transform: scale(1.08) translateY(-2px);
+	filter: drop-shadow(3px 5px 2px rgba(35, 48, 35, 0.38));
 }
 
 .upgrade-text {
@@ -344,7 +349,13 @@ h1 {
 
 @media (max-width: 780px) {
 	.site-header {
+		align-items: flex-start;
 		padding: 20px;
+	}
+
+	.header-actions {
+		flex-wrap: wrap;
+		justify-content: flex-end;
 	}
 
 	.game-layout {

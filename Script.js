@@ -1,4 +1,5 @@
-class Cookie {
+// Cookie model
+	class Cookie {
 			constructor() {
 				this.total = 0;
 				this.perClick = 1;
@@ -27,6 +28,7 @@ class Cookie {
 			}
 		}
 
+		// Upgrades
 		class Upgrade {
 			constructor({ name, description, cost, effect }) {
 				this.name = name;
@@ -47,14 +49,19 @@ class Cookie {
 			}
 		}
 
+		// Game controller
 		class CookieClickerGame {
 			constructor(root) {
 				this.root = root;
+				this.storageKey = 'kermit-clicker-save';
+				this.themeKey = 'kermit-clicker-theme';
 				this.cookie = new Cookie();
 				this.upgrades = this.createUpgrades();
 				this.displays = this.findDisplays();
 				this.audioContext = null;
+				this.loadGame();
 				this.bindEvents();
+				this.applyTheme();
 				this.render();
 				this.startPassiveIncome();
 			}
@@ -92,8 +99,56 @@ class Cookie {
 				};
 			}
 
+			applyTheme() {
+				const isDark = localStorage.getItem(this.themeKey) === 'dark';
+				document.body.classList.toggle('dark-mode', isDark);
+				const themeButton = this.root.parentElement.querySelector('[data-action="theme"]');
+				themeButton.textContent = isDark ? 'Light mode' : 'Dark mode';
+				themeButton.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+			}
+
+			toggleTheme() {
+				const isDark = !document.body.classList.contains('dark-mode');
+				localStorage.setItem(this.themeKey, isDark ? 'dark' : 'light');
+				this.applyTheme();
+			}
+
+			saveGame() {
+				const save = {
+					total: this.cookie.total,
+					perClick: this.cookie.perClick,
+					perSecond: this.cookie.perSecond,
+					purchasedUpgrades: this.upgrades.map((upgrade) => upgrade.purchased)
+				};
+				localStorage.setItem(this.storageKey, JSON.stringify(save));
+				const saveButton = this.root.parentElement.querySelector('[data-action="save"]');
+				saveButton.textContent = 'Saved!';
+				window.setTimeout(() => { saveButton.textContent = 'Save game'; }, 1200);
+			}
+
+			loadGame() {
+				const savedGame = localStorage.getItem(this.storageKey);
+				if (!savedGame) {
+					return;
+				}
+
+				try {
+					const save = JSON.parse(savedGame);
+					this.cookie.total = Number(save.total) || 0;
+					this.cookie.perClick = Number(save.perClick) || 1;
+					this.cookie.perSecond = Number(save.perSecond) || 0;
+					(save.purchasedUpgrades || []).forEach((purchased, index) => {
+						if (purchased && this.upgrades[index]) {
+							this.upgrades[index].purchased = true;
+						}
+					});
+				} catch (error) {
+					localStorage.removeItem(this.storageKey);
+				}
+			}
+
 			bindEvents() {
-				this.root.addEventListener('click', (event) => {
+				this.root.parentElement.addEventListener('click', (event) => {
 					const actionTarget = event.target.closest('[data-action]');
 					if (!actionTarget) {
 						return;
@@ -109,6 +164,14 @@ class Cookie {
 
 					if (actionTarget.dataset.action === 'reset') {
 						this.reset();
+					}
+
+					if (actionTarget.dataset.action === 'save') {
+						this.saveGame();
+					}
+
+					if (actionTarget.dataset.action === 'theme') {
+						this.toggleTheme();
 					}
 				});
 			}
@@ -183,6 +246,7 @@ class Cookie {
 			}
 
 			reset() {
+				localStorage.removeItem(this.storageKey);
 				this.cookie = new Cookie();
 				this.upgrades = this.createUpgrades();
 				this.render();
@@ -201,7 +265,7 @@ class Cookie {
 
 				this.upgrades.forEach((upgrade, index) => {
 					const button = document.createElement('button');
-					const isPepeSprinkles = upgrade.name === 'Extra sprinkles';
+					const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'mister.webp'];
 					button.type = 'button';
 					button.className = 'upgrade';
 					button.dataset.action = 'buy-upgrade';
@@ -210,7 +274,7 @@ class Cookie {
 					button.innerHTML = `
 						<span class="upgrade-main">
 							<span class="upgrade-icon" aria-hidden="true">
-								${isPepeSprinkles ? '<img class="upgrade-image" src="Pepe.webp" alt="Pepe">' : '✨'}
+								<img class="upgrade-image" src="${upgradeImages[index]}" alt="">
 							</span>
 							<span class="upgrade-text">
 								<span class="upgrade-name">${upgrade.name}</span>
@@ -224,6 +288,7 @@ class Cookie {
 			}
 		}
 
+		// Application entry point
 		class Application {
 			static start() {
 				new CookieClickerGame(document.querySelector('main'));

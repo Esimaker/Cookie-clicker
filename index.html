@@ -8,26 +8,27 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
+	<!-- Header -->
 	<header class="site-header">
 		<div class="brand"><span class="brand-mark">🍪</span> Kermit Clicker</div>
-		<button class="header-button" type="button" data-action="reset">New game</button>
+		<div class="header-actions" aria-label="Game controls">
+			<button class="header-button" type="button" data-action="save">Save game</button>
+			<button class="header-button" type="button" data-action="theme" aria-label="Switch to dark mode">Dark mode</button>
+			<button class="header-button" type="button" data-action="reset">New game</button>
+		</div>
 	</header>
 
 	<main class="game-layout">
+		<!-- Kermit button -->
 		<section aria-labelledby="game-title">
-			<div class="intro">
-				<p class="eyebrow">A tiny web game starter</p>
-				<h1 id="game-title">Bake your way to the top.</h1>
-				<p class="intro-copy">Click the cookie, collect crumbs, and buy upgrades. This is a simple foundation you can expand with new characters, sounds, achievements, and more.</p>
-			</div>
-
 			<div class="click-zone">
+				<h1 id="game-title" class="click-prompt">Click me</h1>
 				<button class="cookie-button" type="button" data-action="click-cookie" aria-label="Click the cookie to earn cookies">
-					<span class="cookie-label">Click me</span>
 				</button>
 			</div>
 		</section>
 
+		<!-- Score and upgrades -->
 		<aside class="score-panel" aria-label="Game status">
 			<div>
 				<p class="score-heading">Cookies baked</p>
