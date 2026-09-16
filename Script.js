@@ -56,6 +56,7 @@
 				this.storageKey = 'kermit-clicker-save';
 				this.themeKey = 'kermit-clicker-theme';
 				this.cookie = new Cookie();
+				this.cookieRotation = 0;
 				this.upgrades = this.createUpgrades();
 				this.displays = this.findDisplays();
 				this.audioContext = null;
@@ -198,10 +199,8 @@
 			}
 
 			animateCookieButton(button) {
-				button.classList.remove('is-clicking');
-				void button.offsetWidth;
-				button.classList.add('is-clicking');
-				window.setTimeout(() => button.classList.remove('is-clicking'), 180);
+				this.cookieRotation = (this.cookieRotation + 5) % 360;
+				button.querySelector('.cookie-image').style.setProperty('--cookie-rotation', `${this.cookieRotation}deg`);
 			}
 
 			playCroakSound() {
@@ -248,7 +247,9 @@
 			reset() {
 				localStorage.removeItem(this.storageKey);
 				this.cookie = new Cookie();
+				this.cookieRotation = 0;
 				this.upgrades = this.createUpgrades();
+				this.root.querySelector('.cookie-image').style.setProperty('--cookie-rotation', '0deg');
 				this.render();
 			}
 
@@ -267,8 +268,9 @@
 					const button = document.createElement('button');
 					const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'mister.webp'];
 					const upgradeColors = ['blue', 'red', 'green'];
+					const isAvailable = !upgrade.purchased && this.cookie.canAfford(upgrade.cost);
 					button.type = 'button';
-					button.className = 'upgrade';
+					button.className = `upgrade${isAvailable ? ' is-available' : ''}`;
 					button.dataset.upgradeColor = upgradeColors[index];
 					button.dataset.action = 'buy-upgrade';
 					button.dataset.upgradeIndex = index;

@@ -139,24 +139,25 @@ button {
 	overflow: hidden;
 	border: 12px solid #3f722f;
 	border-radius: 50%;
-	background: #5e9f6f url('images (1) (1).webp') center / contain no-repeat;
+	background: #5e9f6f;
 	box-shadow: inset 0 -18px 0 rgba(39, 77, 35, 0.18), 0 20px 0 #2452b8, 0 30px 30px rgba(38, 69, 45, 0.22);
 	transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.cookie-button.is-clicking {
-	animation: cookie-click-spin 180ms ease-out;
-}
-
-@keyframes cookie-click-spin {
-	0% { transform: rotate(0deg) scale(1); }
-	25% { transform: rotate(-7deg) scale(1.03); }
-	55% { transform: rotate(7deg) scale(0.98); }
-	100% { transform: rotate(0deg) scale(1); }
+.cookie-image {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 96%;
+	height: 96%;
+	object-fit: contain;
+	transform: translate(-50%, -50%) rotate(var(--cookie-rotation, 0deg));
+	transition: transform 120ms ease;
+	pointer-events: none;
 }
 
 .cookie-button:hover {
-	transform: translateY(-4px) rotate(-2deg);
+	transform: translateY(-4px);
 }
 
 .cookie-button:active {
@@ -263,6 +264,16 @@ button {
 .upgrade:hover:not(:disabled) {
 	border-color: var(--green);
 	background: #f4faef;
+}
+
+.upgrade.is-available {
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--upgrade-color) 22%, transparent), 0 8px 18px color-mix(in srgb, var(--upgrade-color) 20%, transparent);
+	animation: upgrade-ready 1.8s ease-in-out infinite;
+}
+
+@keyframes upgrade-ready {
+	0%, 100% { transform: translateY(0); }
+	50% { transform: translateY(-2px); }
 }
 
 body.dark-mode .upgrade:hover:not(:disabled) {
