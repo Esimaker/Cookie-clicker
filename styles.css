@@ -141,6 +141,17 @@ h1 {
 	content: '';
 }
 
+.cookie-button.is-clicking {
+	animation: cookie-click-spin 180ms ease-out;
+}
+
+@keyframes cookie-click-spin {
+	0% { transform: rotate(0deg) scale(1); }
+	25% { transform: rotate(-7deg) scale(1.03); }
+	55% { transform: rotate(7deg) scale(0.98); }
+	100% { transform: rotate(0deg) scale(1); }
+}
+
 .cookie-button:hover {
 	transform: translateY(-4px) rotate(-2deg);
 }
@@ -247,6 +258,41 @@ h1 {
 .upgrade:disabled {
 	cursor: not-allowed;
 	opacity: 0.5;
+}
+
+.upgrade-main {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.upgrade-icon {
+	display: grid;
+	place-items: center;
+	width: 56px;
+	height: 56px;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	background: #f8f1d5;
+	font-size: 1.2rem;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.upgrade-image {
+	display: block;
+	width: 118%;
+	height: 118%;
+	object-fit: cover;
+	object-position: center;
+	transform: scale(1.08);
+}
+
+.upgrade-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
 }
 
 .upgrade-name {

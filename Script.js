@@ -53,6 +53,7 @@ class Cookie {
 				this.cookie = new Cookie();
 				this.upgrades = this.createUpgrades();
 				this.displays = this.findDisplays();
+				this.audioContext = null;
 				this.bindEvents();
 				this.render();
 				this.startPassiveIncome();
@@ -99,7 +100,7 @@ class Cookie {
 					}
 
 					if (actionTarget.dataset.action === 'click-cookie') {
-						this.handleCookieClick(actionTarget);
+						this.handleCookieClick(actionTarget, event);
 					}
 
 					if (actionTarget.dataset.action === 'buy-upgrade') {
@@ -112,21 +113,58 @@ class Cookie {
 				});
 			}
 
-			handleCookieClick(button) {
+			handleCookieClick(button, event) {
 				this.cookie.click();
-				this.createClickPop(button);
+				this.createClickPop(button, event);
+				this.animateCookieButton(button);
+				this.playCroakSound();
 				this.render();
 			}
 
-			createClickPop(button) {
+			createClickPop(button, event) {
 				const pop = document.createElement('span');
 				const position = button.getBoundingClientRect();
+				const x = event ? event.clientX : position.left + position.width / 2;
+				const y = event ? event.clientY : position.top + position.height / 2;
 				pop.className = 'click-pop';
 				pop.textContent = `+${this.cookie.perClick}`;
-				pop.style.left = `${position.left + position.width / 2}px`;
-				pop.style.top = `${position.top + position.height / 2}px`;
+				pop.style.left = `${x}px`;
+				pop.style.top = `${y}px`;
 				document.body.appendChild(pop);
 				window.setTimeout(() => pop.remove(), 700);
+			}
+
+			animateCookieButton(button) {
+				button.classList.remove('is-clicking');
+				void button.offsetWidth;
+				button.classList.add('is-clicking');
+				window.setTimeout(() => button.classList.remove('is-clicking'), 180);
+			}
+
+			playCroakSound() {
+				const AudioCtor = window.AudioContext || window.webkitAudioContext;
+				if (!AudioCtor) {
+					return;
+				}
+
+				this.audioContext = this.audioContext || new AudioCtor();
+				const context = this.audioContext;
+				const now = context.currentTime;
+				const oscillator = context.createOscillator();
+				const gain = context.createGain();
+
+				oscillator.type = 'triangle';
+				oscillator.frequency.setValueAtTime(240, now);
+				oscillator.frequency.exponentialRampToValueAtTime(110, now + 0.18);
+
+				gain.gain.setValueAtTime(0.0001, now);
+				gain.gain.exponentialRampToValueAtTime(0.09, now + 0.02);
+				gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+				oscillator.connect(gain);
+				gain.connect(context.destination);
+				oscillator.start(now);
+				oscillator.stop(now + 0.23);
 			}
 
 			buyUpgrade(index) {
@@ -163,12 +201,24 @@ class Cookie {
 
 				this.upgrades.forEach((upgrade, index) => {
 					const button = document.createElement('button');
+					const isPepeSprinkles = upgrade.name === 'Extra sprinkles';
 					button.type = 'button';
 					button.className = 'upgrade';
 					button.dataset.action = 'buy-upgrade';
 					button.dataset.upgradeIndex = index;
 					button.disabled = upgrade.purchased || !this.cookie.canAfford(upgrade.cost);
-					button.innerHTML = `<span><span class="upgrade-name">${upgrade.name}</span><span class="upgrade-description">${upgrade.purchased ? 'Purchased' : upgrade.description}</span></span><span class="upgrade-cost">${upgrade.purchased ? '✓' : upgrade.cost}</span>`;
+					button.innerHTML = `
+						<span class="upgrade-main">
+							<span class="upgrade-icon" aria-hidden="true">
+								${isPepeSprinkles ? '<img class="upgrade-image" src="Pepe.webp" alt="Pepe">' : '✨'}
+							</span>
+							<span class="upgrade-text">
+								<span class="upgrade-name">${upgrade.name}</span>
+								<span class="upgrade-description">${upgrade.purchased ? 'Purchased' : upgrade.description}</span>
+							</span>
+						</span>
+						<span class="upgrade-cost">${upgrade.purchased ? '✓' : upgrade.cost}</span>
+					`;
 					this.displays.upgrades.appendChild(button);
 				});
 			}
