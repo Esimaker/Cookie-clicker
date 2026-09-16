@@ -5,7 +5,7 @@
 	--paper: #fffdf7;
 	--green: #5e9f6f;
 	--dark-green: #34704a;
-	--yellow: #f5c85b;
+	--yellow: #459230;
 	--line: #e8dcc2;
 	--shadow: 0 18px 45px rgba(72, 62, 35, 0.12);
 }
@@ -126,17 +126,17 @@ h1 {
 	aspect-ratio: 1;
 	place-items: center;
 	overflow: hidden;
-	border: 12px solid #d89d47;
+	border: 12px solid #3f722f;
 	border-radius: 50%;
-	background: #e9b45a url('https://placehold.co/600x600/e9b45a/7b4a22?text=COOKIE') center / cover;
-	box-shadow: inset 0 -18px 0 rgba(123, 74, 34, 0.14), 0 20px 0 #b77d36, 0 30px 30px rgba(89, 61, 27, 0.22);
+	background: #5e9f6f url('images (1) (1).webp') center / contain no-repeat;
+	box-shadow: inset 0 -18px 0 rgba(39, 77, 35, 0.18), 0 20px 0 #2452b8, 0 30px 30px rgba(38, 69, 45, 0.22);
 	transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .cookie-button::after {
 	position: absolute;
 	inset: 18%;
-	border: 2px dashed rgba(255, 248, 232, 0.68);
+	border: 2px dashed rgba(232, 255, 232, 0.68);
 	border-radius: 50%;
 	content: '';
 }
