@@ -50,11 +50,11 @@
 		}
 
 		// Game controller
-		class CookieClickerGame {
+		class PepeClickerGame {
 			constructor(root) {
 				this.root = root;
-				this.storageKey = 'kermit-clicker-save';
-				this.themeKey = 'kermit-clicker-theme';
+				this.storageKey = 'pepe-clicker-save';
+				this.themeKey = 'pepe-clicker-theme';
 				this.cookie = new Cookie();
 				this.cookieRotation = 0;
 				this.upgrades = this.createUpgrades();
@@ -76,7 +76,7 @@
 						effect: (cookie) => { cookie.perClick += 1; }
 					}),
 					new Upgrade({
-						name: 'Kermit bakery',
+						name: 'Pepe bakery',
 						description: '+1 cookie per second',
 						cost: 75,
 						effect: (cookie) => { cookie.perSecond += 1; }
@@ -295,7 +295,7 @@
 		// Application entry point
 		class Application {
 			static start() {
-				new CookieClickerGame(document.querySelector('main'));
+				new PepeClickerGame(document.querySelector('main'));
 			}
 		}
 
