@@ -55,16 +55,10 @@ button {
 .site-header {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	max-width: 1180px;
+	justify-content: flex-start;
+	max-width: 1920px;
 	margin: 0 auto;
-	padding: 26px 28px;
-}
-
-/* Header controls */
-.header-actions {
-	display: flex;
-	gap: 8px;
+	padding: 18px 16px 0;
 }
 
 .brand {
@@ -92,9 +86,10 @@ button {
 .header-button {
 	border: 1px solid var(--line);
 	border-radius: 999px;
-	padding: 10px 16px;
+	padding: 8px 12px;
 	background: var(--panel);
-	font-size: 0.9rem;
+	font-size: 0.82rem;
+	white-space: nowrap;
 }
 
 .header-button:hover {
@@ -103,19 +98,50 @@ button {
 
 .game-layout {
 	display: grid;
-	grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
-	gap: 28px;
-	max-width: 1180px;
+	grid-template-columns: minmax(0, 0.74fr) minmax(120px, 0.5fr) minmax(240px, 0.38fr);
+	gap: 16px;
+	width: 100%;
+	max-width: 1920px;
+	min-height: 900px;
 	margin: 0 auto;
-	padding: 34px 28px 54px;
+	padding: 10px 8px 30px;
+	align-items: stretch;
+}
+
+.left-column,
+.score-panel {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.center-panel {
+	min-height: 650px;
+	border-radius: 28px;
+	background: transparent;
+}
+
+.panel-actions {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-start;
+	margin: 0 0 12px;
+	padding: 0 4px;
+}
+
+.right-actions {
+	justify-content: flex-start;
 }
 
 .click-zone {
 	display: grid;
-	min-height: 600px;
-	place-items: center;
+	align-content: center;
+	justify-items: center;
+	flex: 1;
+	min-height: 760px;
+	padding: 18px 8px 0;
 	border: 1px solid var(--line);
-	border-radius: 28px;
+	border-radius: 24px;
 	background: var(--panel);
 	box-shadow: var(--shadow);
 }
@@ -133,14 +159,15 @@ button {
 .cookie-button {
 	position: relative;
 	display: grid;
-	width: min(72vw, 300px);
+	width: min(48vw, 240px);
+	margin-top: 8px;
 	aspect-ratio: 1;
 	place-items: center;
 	overflow: hidden;
-	border: 12px solid #3f722f;
+	border: 9px solid #3f722f;
 	border-radius: 50%;
 	background: #5e9f6f;
-	box-shadow: inset 0 -18px 0 rgba(39, 77, 35, 0.18), 0 20px 0 #2452b8, 0 30px 30px rgba(38, 69, 45, 0.22);
+	box-shadow: inset 0 -18px 0 rgba(39, 77, 35, 0.18), 0 16px 0 #2452b8, 0 24px 24px rgba(38, 69, 45, 0.22);
 	transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
@@ -166,42 +193,58 @@ button {
 }
 
 .score-panel {
-	display: grid;
-	grid-template-rows: auto auto 1fr auto;
-	min-height: 650px;
-	padding: 28px;
+	display: flex;
+	flex-direction: column;
+	min-height: 760px;
+	padding: 10px 10px 12px;
 	border: 1px solid var(--line);
 	border-radius: 28px;
 	background: var(--paper);
 	box-shadow: var(--shadow);
 }
 
+.panel-actions {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-start;
+	margin: 0 0 14px;
+	padding: 0 4px;
+	order: 0;
+}
+
+.score-body {
+	display: grid;
+	grid-template-rows: auto auto;
+	flex: 1;
+	padding: 0 4px;
+}
+
 /* Upgrades */
 .score-heading {
 	margin: 0;
 	color: var(--muted);
-	font-size: 0.9rem;
+	font-size: 0.8rem;
 	font-weight: normal;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 }
 
 .score {
-	margin: 8px 0 28px;
-	font-size: clamp(3rem, 8vw, 5.5rem);
+	margin: 8px 0 22px;
+	font-size: clamp(2.2rem, 3.7vw, 3.5rem);
 	line-height: 1;
 }
 
 .stats {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	gap: 10px;
-	margin-bottom: 24px;
+	gap: 8px;
+	margin-bottom: 18px;
 }
 
 .stat {
-	padding: 14px;
-	border-radius: 14px;
+	padding: 10px 12px;
+	border-radius: 12px;
 	background: var(--soft);
 }
 
@@ -209,11 +252,11 @@ button {
 	display: block;
 	margin-bottom: 4px;
 	color: var(--muted);
-	font-size: 0.78rem;
+	font-size: 0.72rem;
 }
 
 .stat-value {
-	font-size: 1.3rem;
+	font-size: 1.08rem;
 	font-weight: bold;
 }
 
@@ -222,25 +265,25 @@ button {
 	align-items: center;
 	justify-content: space-between;
 	margin: 0 0 10px;
-	font-size: 1.25rem;
+	font-size: 1.05rem;
 }
 
 .upgrade-list {
 	display: grid;
 	align-content: start;
-	gap: 10px;
+	gap: 8px;
 }
 
 .upgrade {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 12px;
+	gap: 8px;
 	width: 100%;
-	padding: 14px;
+	padding: 9px 10px;
 	border: 1px solid var(--upgrade-color, var(--line));
 	border-left-width: 5px;
-	border-radius: 14px;
+	border-radius: 12px;
 	background: transparent;
 	text-align: left;
 	transition: border-color 120ms ease, background 120ms ease;
@@ -288,19 +331,19 @@ body.dark-mode .upgrade:hover:not(:disabled) {
 .upgrade-main {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 8px;
 	min-width: 0;
 }
 
 .upgrade-icon {
 	display: grid;
 	place-items: center;
-	width: 64px;
-	height: 64px;
+	width: 52px;
+	height: 52px;
 	border: 2px solid var(--upgrade-color, var(--line));
 	border-radius: 10px;
 	background: var(--upgrade-surface, #f8f1d5);
-	font-size: 1.2rem;
+	font-size: 1rem;
 	overflow: visible;
 	flex-shrink: 0;
 	box-shadow: 0 7px 0 rgba(41, 68, 47, 0.18), 0 11px 16px rgba(41, 68, 47, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
@@ -312,8 +355,8 @@ body.dark-mode .upgrade-icon {
 
 .upgrade-image {
 	display: block;
-	width: 56px;
-	height: 56px;
+	width: 42px;
+	height: 42px;
 	object-fit: contain;
 	object-position: center;
 	filter: drop-shadow(3px 5px 2px rgba(35, 48, 35, 0.38));
@@ -330,30 +373,36 @@ body.dark-mode .upgrade-icon {
 
 .upgrade-name {
 	display: block;
-	margin-bottom: 4px;
+	margin-bottom: 3px;
+	font-size: 0.9rem;
 	font-weight: bold;
 }
 
 .upgrade-description {
 	color: var(--muted);
-	font-size: 0.82rem;
+	font-size: 0.72rem;
 }
 
 .upgrade-cost {
 	flex-shrink: 0;
 	color: var(--dark-green);
+	font-size: 0.82rem;
 	font-weight: bold;
 }
 
-.reset-button {
-	width: 100%;
-	margin-top: 24px;
-	border: 0;
-	border-radius: 12px;
-	padding: 13px;
-	background: var(--dark-green);
-	color: white;
-	font-size: 0.95rem;
+@media (max-width: 1280px) {
+	.game-layout {
+		grid-template-columns: minmax(0, 1.1fr) minmax(80px, 0.45fr) minmax(255px, 0.42fr);
+		gap: 14px;
+	}
+
+	.click-zone {
+		min-height: 620px;
+	}
+
+	.score-panel {
+		min-height: 620px;
+	}
 }
 
 .reset-button:hover {
@@ -378,17 +427,16 @@ body.dark-mode .upgrade-icon {
 @media (max-width: 780px) {
 	.site-header {
 		align-items: flex-start;
-		padding: 20px;
+		padding: 18px 16px 0;
 	}
 
-	.header-actions {
+	.panel-actions {
 		flex-wrap: wrap;
-		justify-content: flex-end;
 	}
 
 	.game-layout {
 		grid-template-columns: 1fr;
-		padding: 20px 20px 40px;
+		padding: 12px 12px 28px;
 	}
 
 	.click-zone {

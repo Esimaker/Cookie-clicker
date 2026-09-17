@@ -11,16 +11,11 @@
 	<!-- Header -->
 	<header class="site-header">
 		<div class="brand"><span class="brand-mark">🍪</span> Pepe Clicker</div>
-		<div class="header-actions" aria-label="Game controls">
-			<button class="header-button" type="button" data-action="save">Save game</button>
-			<button class="header-button" type="button" data-action="theme" aria-label="Switch to dark mode">Dark mode</button>
-			<button class="header-button" type="button" data-action="reset">New game</button>
-		</div>
 	</header>
 
 	<main class="game-layout">
-		<!-- Pepe button -->
-		<section aria-labelledby="game-title">
+		<!-- Left: Pepe button -->
+		<section class="left-column" aria-labelledby="game-title">
 			<div class="click-zone">
 				<h1 id="game-title" class="click-prompt">Click me</h1>
 				<button class="cookie-button" type="button" data-action="click-cookie" aria-label="Click the cookie to earn cookies">
@@ -29,24 +24,31 @@
 			</div>
 		</section>
 
-		<!-- Score and upgrades -->
+		<!-- Center: reserved for future features -->
+		<section class="center-panel" aria-label="Reserved space for future content"></section>
+
+		<!-- Right: Score and upgrades -->
 		<aside class="score-panel" aria-label="Game status">
-			<div>
-				<p class="score-heading">Cookies baked</p>
-				<p class="score" data-display="score">0</p>
-				<div class="stats">
-					<div class="stat"><span class="stat-label">Per click</span><span class="stat-value" data-display="per-click">1</span></div>
-					<div class="stat"><span class="stat-label">Per second</span><span class="stat-value" data-display="per-second">0</span></div>
+			<div class="panel-actions right-actions" aria-label="Game controls">
+				<button class="header-button" type="button" data-action="save">Save game</button>
+				<button class="header-button" type="button" data-action="theme" aria-label="Switch to dark mode">Dark mode</button>
+				<button class="header-button" type="button" data-action="reset">New game</button>
+			</div>
+			<div class="score-body">
+				<div>
+					<p class="score-heading">Cookies baked</p>
+					<p class="score" data-display="score">0</p>
+					<div class="stats">
+						<div class="stat"><span class="stat-label">Per click</span><span class="stat-value" data-display="per-click">1</span></div>
+						<div class="stat"><span class="stat-label">Per second</span><span class="stat-value" data-display="per-second">0</span></div>
+					</div>
+				</div>
+
+				<div>
+					<h2 class="upgrade-title">Upgrades <span data-display="upgrade-count">0</span></h2>
+					<div class="upgrade-list" data-display="upgrades"></div>
 				</div>
 			</div>
-
-			<div>
-				<h2 class="upgrade-title">Upgrades <span data-display="upgrade-count">0</span></h2>
-				<div class="upgrade-list" data-display="upgrades"></div>
-			</div>
-
-			<div></div>
-			<button class="reset-button" type="button" data-action="reset">Reset progress</button>
 		</aside>
 	</main>
 	<script src="Script.js"></script>
