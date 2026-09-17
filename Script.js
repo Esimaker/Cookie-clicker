@@ -266,7 +266,7 @@
 
 				this.upgrades.forEach((upgrade, index) => {
 					const button = document.createElement('button');
-					const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'mister.webp'];
+					const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif'];
 					const upgradeColors = ['blue', 'red', 'green'];
 					const isAvailable = !upgrade.purchased && this.cookie.canAfford(upgrade.cost);
 					button.type = 'button';
