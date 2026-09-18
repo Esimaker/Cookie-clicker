@@ -299,4 +299,4 @@
 			}
 		}
 
-		document.addEventListener('DOMContentLoaded', Application.start);Kermit
+		document.addEventListener('DOMContentLoaded', Application.start);
