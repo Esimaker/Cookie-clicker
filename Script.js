@@ -1,21 +1,27 @@
 // Cookie model
 	class Cookie {
-			constructor() {
-				this.total = 0;
-				this.perClick = 1;
-				this.perSecond = 0;
-			}
+			#total = 0;
+			#perClick = 1;
+			#perSecond = 0;
+
+			get total() { return this.#total; }
+			get perClick() { return this.#perClick; }
+			get perSecond() { return this.#perSecond; }
+
+			set total(val) { this.#total = val; }
+			set perClick(val) { this.#perClick = val; }
+			set perSecond(val) { this.#perSecond = val; }
 
 			click() {
-				this.total += this.perClick;
+				this.#total += this.#perClick;
 			}
 
 			addPassiveIncome() {
-				this.total += this.perSecond;
+				this.#total += this.#perSecond;
 			}
 
 			canAfford(cost) {
-				return this.total >= cost;
+				return this.#total >= cost;
 			}
 
 			spend(amount) {
@@ -23,18 +29,17 @@
 					return false;
 				}
 
-				this.total -= amount;
+				this.#total -= amount;
 				return true;
 			}
 		}
 
-		// Upgrades
+		// Upgrades - Base Class (Abstraction)
 		class Upgrade {
-			constructor({ name, description, cost, effect }) {
+			constructor({ name, description, cost }) {
 				this.name = name;
 				this.description = description;
 				this.cost = cost;
-				this.effect = effect;
 				this.purchased = false;
 			}
 
@@ -44,8 +49,36 @@
 				}
 
 				this.purchased = true;
-				this.effect(cookie);
+				this.applyEffect(cookie);
 				return true;
+			}
+
+			// Polymorphic method
+			applyEffect(cookie) {
+				throw new Error("applyEffect() must be implemented by subclass");
+			}
+		}
+
+		// Inheritance: Specific upgrade types
+		class ClickUpgrade extends Upgrade {
+			constructor({ name, description, cost, bonus }) {
+				super({ name, description, cost });
+				this.bonus = bonus;
+			}
+
+			applyEffect(cookie) {
+				cookie.perClick += this.bonus;
+			}
+		}
+
+		class PassiveUpgrade extends Upgrade {
+			constructor({ name, description, cost, bonus }) {
+				super({ name, description, cost });
+				this.bonus = bonus;
+			}
+
+			applyEffect(cookie) {
+				cookie.perSecond += this.bonus;
 			}
 		}
 
@@ -69,23 +102,23 @@
 
 			createUpgrades() {
 				return [
-					new Upgrade({
+					new ClickUpgrade({
 						name: 'Extra sprinkles',
 						description: '+1 cookie per click',
 						cost: 25,
-						effect: (cookie) => { cookie.perClick += 1; }
+						bonus: 1
 					}),
-					new Upgrade({
+					new PassiveUpgrade({
 						name: 'Pepe bakery',
 						description: '+1 cookie per second',
 						cost: 75,
-						effect: (cookie) => { cookie.perSecond += 1; }
+						bonus: 1
 					}),
-					new Upgrade({
+					new ClickUpgrade({
 						name: 'Golden oven',
 						description: '+5 cookies per click',
 						cost: 250,
-						effect: (cookie) => { cookie.perClick += 5; }
+						bonus: 5
 					})
 				];
 			}
