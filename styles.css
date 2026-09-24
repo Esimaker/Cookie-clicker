@@ -40,7 +40,7 @@ body {
 	margin: 0;
 	color: var(--ink);
 	background:
-		radial-gradient(circle at 12% 10%, rgba(245, 200, 91, 0.28), transparent 28%),
+		radial-gradient(circle at 12% 10%, rgba(157, 247, 88, 0.28), transparent 28%),
 		radial-gradient(circle at 90% 18%, rgba(94, 159, 111, 0.2), transparent 24%),
 		var(--cream);
 	font-family: Georgia, 'Times New Roman', serif;
