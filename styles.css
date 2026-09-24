@@ -65,11 +65,20 @@ button {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	color: var(--dark-green);
+	color: #1d8b57;
 	font-size: 1.25rem;
 	font-weight: bold;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.brand a,
+.brand a:visited,
+.brand a:hover,
+.brand a:active {
+	color: #1d8b57;
+	text-decoration: none;
 }
 
 .brand-mark {
