@@ -76,10 +76,10 @@ button {
 	display: block;
 	width: 42px;
 	height: 42px;
-	border: 2px solid var(--dark-green);
+	border: 2px solid #000;
 	border-radius: 50%;
 	overflow: hidden;
-	background: var(--yellow);
+	background: #000;
 	flex-shrink: 0;
 }
 
