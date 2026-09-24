@@ -192,6 +192,10 @@
 						this.handleCookieClick(actionTarget, event);
 					}
 
+					if (actionTarget.dataset.action === 'brand-sound') {
+						this.playBrandSound();
+					}
+
 					if (actionTarget.dataset.action === 'buy-upgrade') {
 						this.buyUpgrade(Number(actionTarget.dataset.upgradeIndex));
 					}
@@ -260,6 +264,18 @@
 				gain.connect(context.destination);
 				oscillator.start(now);
 				oscillator.stop(now + 0.23);
+			}
+
+			playBrandSound() {
+				if (!this.brandSound) {
+					this.brandSound = new Audio('freesound_community-yay-6120.mp3');
+					this.brandSound.preload = 'auto';
+				}
+
+				this.brandSound.currentTime = 0;
+				this.brandSound.play().catch(() => {
+					// Ignore play() restrictions until a user interaction has been accepted.
+				});
 			}
 
 			playUpgradeSound() {
