@@ -262,8 +262,38 @@
 				oscillator.stop(now + 0.23);
 			}
 
+			playUpgradeSound() {
+				const AudioCtor = window.AudioContext || window.webkitAudioContext;
+				if (!AudioCtor) {
+					return;
+				}
+
+				this.audioContext = this.audioContext || new AudioCtor();
+				const context = this.audioContext;
+				const notes = [660, 880, 1320];
+
+				notes.forEach((frequency, index) => {
+					const oscillator = context.createOscillator();
+					const gain = context.createGain();
+					const startAt = context.currentTime + index * 0.07;
+
+					oscillator.type = index === 0 ? 'square' : 'triangle';
+					oscillator.frequency.setValueAtTime(frequency, startAt);
+
+					gain.gain.setValueAtTime(0.0001, startAt);
+					gain.gain.exponentialRampToValueAtTime(0.08, startAt + 0.01);
+					gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.16);
+
+					oscillator.connect(gain);
+					gain.connect(context.destination);
+					oscillator.start(startAt);
+					oscillator.stop(startAt + 0.18);
+				});
+			}
+
 			buyUpgrade(index) {
 				if (this.upgrades[index].purchase(this.cookie)) {
+					this.playUpgradeSound();
 					this.render();
 				}
 			}
