@@ -427,8 +427,17 @@
 			}
 
 			createUpgradeButton(item, index, action) {
-				const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif', 'Pepe.webp', 'Parinaz.webp', 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif', 'Pepe.webp', 'Parinaz.webp'];
-				const upgradeColors = ['blue', 'red', 'green', 'blue', 'red', 'green', 'blue', 'red'];
+				const upgradeImages = [
+					'Pepe.webp', 
+					'Parinaz.webp', 
+					'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif', 
+					'mister.webp',
+					'Pepe.png',
+					'Pepe (1).png',
+					'351912467071492-3.webp',
+					'18366310974687406.png'
+				];
+				const upgradeColors = ['blue', 'red', 'green', 'yellow', 'purple', 'orange'];
 				
 				const cost = item instanceof ProductionUnit ? item.getCurrentCost() : item.cost;
 				const isAvailable = (item instanceof ProductionUnit ? item.count < 100 : !item.purchased) && this.cookie.canAfford(cost);
@@ -440,7 +449,7 @@
 				const typeClass = item instanceof ProductionUnit ? 'unit-button' : 'special-button';
 				button.className = `upgrade ${typeClass}${isAvailable ? ' is-available' : ''}`;
 				
-				button.dataset.upgradeColor = upgradeColors[index % 3];
+				button.dataset.upgradeColor = upgradeColors[index % upgradeColors.length];
 				button.dataset.action = action;
 				button.dataset.upgradeIndex = index;
 				
@@ -453,7 +462,7 @@
 				button.innerHTML = `
 					<span class="upgrade-main">
 						<span class="upgrade-icon" aria-hidden="true">
-							<img class="upgrade-image" src="${upgradeImages[index % 3]}" alt="">
+							<img class="upgrade-image" src="${upgradeImages[index % upgradeImages.length]}" alt="">
 						</span>
 						<span class="upgrade-text">
 							<span class="upgrade-name">${item.name}</span>

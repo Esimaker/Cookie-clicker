@@ -358,6 +358,21 @@ button {
 	--upgrade-surface: #e8f5e5;
 }
 
+.upgrade[data-upgrade-color="yellow"] {
+	--upgrade-color: #d4a017;
+	--upgrade-surface: #fef9e7;
+}
+
+.upgrade[data-upgrade-color="purple"] {
+	--upgrade-color: #8e44ad;
+	--upgrade-surface: #f4eef8;
+}
+
+.upgrade[data-upgrade-color="orange"] {
+	--upgrade-color: #e67e22;
+	--upgrade-surface: #fdf2e9;
+}
+
 .upgrade:hover:not(:disabled) {
 	border-color: var(--green);
 	background: radial-gradient(circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(255, 255, 255, 0.92), #f4faef 55%);
