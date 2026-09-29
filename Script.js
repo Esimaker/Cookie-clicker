@@ -92,6 +92,7 @@
 				this.cookieRotation = 0;
 				this.upgrades = this.createUpgrades();
 				this.displays = this.findDisplays();
+				this.magneticUpgrade = null;
 				this.audioContext = null;
 				this.loadGame();
 				this.bindEvents();
@@ -182,6 +183,27 @@
 			}
 
 			bindEvents() {
+				this.displays.upgrades.addEventListener('pointermove', (event) => {
+					const button = event.target.closest('.upgrade');
+					if (this.magneticUpgrade && this.magneticUpgrade !== button) {
+						this.resetMagneticUpgrade();
+					}
+
+					if (!button || button.disabled || event.pointerType !== 'mouse') {
+						return;
+					}
+
+					const bounds = button.getBoundingClientRect();
+					const offsetX = (event.clientX - bounds.left) / bounds.width - 0.5;
+					const offsetY = (event.clientY - bounds.top) / bounds.height - 0.5;
+					button.style.setProperty('--magnetic-x', `${offsetX * 12}px`);
+					button.style.setProperty('--magnetic-y', `${offsetY * 10}px`);
+					button.style.setProperty('--pointer-x', `${event.clientX - bounds.left}px`);
+					button.style.setProperty('--pointer-y', `${event.clientY - bounds.top}px`);
+					this.magneticUpgrade = button;
+				});
+				this.displays.upgrades.addEventListener('pointerleave', () => this.resetMagneticUpgrade());
+
 				this.root.parentElement.addEventListener('click', (event) => {
 					const actionTarget = event.target.closest('[data-action]');
 					if (!actionTarget) {
@@ -212,6 +234,16 @@
 						this.toggleTheme();
 					}
 				});
+			}
+
+			resetMagneticUpgrade() {
+				if (!this.magneticUpgrade) {
+					return;
+				}
+
+				this.magneticUpgrade.style.removeProperty('--magnetic-x');
+				this.magneticUpgrade.style.removeProperty('--magnetic-y');
+				this.magneticUpgrade = null;
 			}
 
 			handleCookieClick(button, event) {
@@ -311,6 +343,8 @@
 				if (this.upgrades[index].purchase(this.cookie)) {
 					this.playUpgradeSound();
 					this.render();
+					const purchasedButton = this.displays.upgrades.querySelector(`[data-upgrade-index="${index}"]`);
+					purchasedButton.classList.add('is-purchased');
 				}
 			}
 
