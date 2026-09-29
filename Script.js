@@ -228,6 +228,40 @@
 			}
 
 			bindEvents() {
+				const clickPrompt = this.root.querySelector('.click-prompt');
+				const cookieButton = this.root.querySelector('.cookie-button');
+				const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+				const resetClickPrompt = () => {
+					clickPrompt.style.removeProperty('--magnetic-x');
+					clickPrompt.style.removeProperty('--magnetic-y');
+				};
+
+				document.addEventListener('pointermove', (event) => {
+					if (event.pointerType !== 'mouse' || reduceMotion.matches) {
+						resetClickPrompt();
+						return;
+					}
+
+					const buttonBounds = cookieButton.getBoundingClientRect();
+					const buttonCenterX = buttonBounds.left + buttonBounds.width / 2;
+					const buttonCenterY = buttonBounds.top + buttonBounds.height / 2;
+					const distance = Math.hypot(event.clientX - buttonCenterX, event.clientY - buttonCenterY);
+					const radius = 260;
+
+					if (distance >= radius) {
+						resetClickPrompt();
+						return;
+					}
+
+					const promptBounds = clickPrompt.getBoundingClientRect();
+					const strength = 1 - distance / radius;
+					const offsetX = (event.clientX - (promptBounds.left + promptBounds.width / 2)) * strength * 0.12;
+					const offsetY = (event.clientY - (promptBounds.top + promptBounds.height / 2)) * strength * 0.12;
+					clickPrompt.style.setProperty('--magnetic-x', `${Math.max(-16, Math.min(16, offsetX))}px`);
+					clickPrompt.style.setProperty('--magnetic-y', `${Math.max(-12, Math.min(12, offsetY))}px`);
+				});
+				document.addEventListener('pointerleave', resetClickPrompt);
+
 				this.displays.upgrades.addEventListener('pointermove', (event) => {
 					const button = event.target.closest('.upgrade');
 					if (this.magneticUpgrade && this.magneticUpgrade !== button) {
@@ -257,7 +291,7 @@
 					if (action === 'click-cookie') this.handleCookieClick(actionTarget, event);
 					if (action === 'brand-sound') this.playBrandSound();
 					if (action === 'buy-upgrade') this.buyUpgrade(Number(actionTarget.dataset.upgradeIndex));
-					if (action === 'buy-production') this.buyProduction(Number(actionTarget.dataset.upgradeIndex));
+					if (action === 'buy-production') this.buyProduction(Number(actionTarget.dataset.upgradeIndex), actionTarget);
 					if (action === 'reset') this.reset();
 					if (action === 'save') this.saveGame();
 					if (action === 'theme') this.toggleTheme();
@@ -369,11 +403,33 @@
 				}
 			}
 
-			buyProduction(index) {
+			buyProduction(index, button) {
 				if (this.productionUnits[index].purchase(this.cookie)) {
 					this.playUpgradeSound();
+					this.playProductionFlyout(button);
 					this.render();
 				}
+			}
+
+			playProductionFlyout(button) {
+				if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+				const bounds = button.getBoundingClientRect();
+				const flyout = button.cloneNode(true);
+				flyout.classList.remove('is-available');
+				flyout.classList.add('production-flyout');
+				flyout.disabled = true;
+				flyout.setAttribute('aria-hidden', 'true');
+				flyout.removeAttribute('data-action');
+				flyout.style.position = 'fixed';
+				flyout.style.left = `${bounds.left}px`;
+				flyout.style.top = `${bounds.top}px`;
+				flyout.style.width = `${bounds.width}px`;
+				flyout.style.height = `${bounds.height}px`;
+				flyout.style.margin = '0';
+				flyout.addEventListener('animationend', () => flyout.remove(), { once: true });
+				document.body.appendChild(flyout);
+				window.setTimeout(() => flyout.remove(), 900);
 			}
 
 			startPassiveIncome() {
