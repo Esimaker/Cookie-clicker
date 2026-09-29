@@ -148,11 +148,11 @@
 
 			createSpecialUpgrades() {
 				return [
-					new SpecialUpgrade({ name: 'Stronger Fingers', description: '+10 per click', cost: 500, effectType: 'click', effectValue: 10 }),
-					new SpecialUpgrade({ name: 'Automatic Stirrer', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05 }),
-					new SpecialUpgrade({ name: 'Industrial Bowls', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50 }),
-					new SpecialUpgrade({ name: 'Froggy Synergy', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20 }),
-					new SpecialUpgrade({ name: 'Cosmic Cookie', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000 }),
+					new SpecialUpgrade({ name: 'Meme-Powered Clicks', description: '+10 per click', cost: 500, effectType: 'click', effectValue: 10 }),
+					new SpecialUpgrade({ name: 'Pepe\'s Auto-Baker', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05 }),
+					new SpecialUpgrade({ name: 'Rare Pepe Vat', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50 }),
+					new SpecialUpgrade({ name: 'The Great Frog-mony', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20 }),
+					new SpecialUpgrade({ name: 'Intergalactic Pepe-Sliver', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000 }),
 				];
 			}
 
@@ -540,8 +540,15 @@
 				const disabled = (item instanceof ProductionUnit ? item.count >= 100 : item.purchased) || !this.cookie.canAfford(cost);
 				button.disabled = disabled;
 				
-				const label = item instanceof ProductionUnit ? `x${item.count}` : (item.purchased ? '✓' : cost);
-				const desc = (item instanceof ProductionUnit && item.count >= 100) ? 'MAXED' : (item instanceof ProductionUnit ? item.description : (item.purchased ? 'Purchased' : item.description));
+				// New logic for labels and descriptions to show costs clearly
+				let label, desc;
+				if (item instanceof ProductionUnit) {
+					label = item.count >= 100 ? 'MAX' : cost.toLocaleString();
+					desc = `${item.description} (x${item.count})`;
+				} else {
+					label = item.purchased ? '✓' : cost.toLocaleString();
+					desc = item.purchased ? 'Purchased' : item.description;
+				}
 
 				button.innerHTML = `
 					<span class="upgrade-main">
