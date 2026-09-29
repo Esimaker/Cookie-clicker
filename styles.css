@@ -343,21 +343,32 @@ button {
 	justify-content: center;
 	text-align: center;
 	padding: 10px 5px;
-	height: 100px;
+	min-height: 130px;
+	height: auto;
 }
 
 .upgrade.special-button .upgrade-main {
 	flex-direction: column;
-	gap: 5px;
+	gap: 4px;
+	margin-bottom: 4px;
 }
 
-.upgrade.special-button .upgrade-text {
+.upgrade.special-button .upgrade-name {
+	font-size: 0.75rem;
+	line-height: 1.1;
+	display: block;
+	margin-bottom: 2px;
+}
+
+.upgrade.special-button .upgrade-description {
 	display: none;
 }
 
 .upgrade.special-button .upgrade-cost {
 	font-size: 0.7rem;
-	margin-top: 5px;
+	margin-top: 0;
+	margin-bottom: 5px;
+	font-weight: bold;
 }
 
 .production-section .upgrade-list {

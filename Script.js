@@ -40,10 +40,11 @@
 
 		// Upgrades - Base Class (Abstraction)
 		class Upgrade {
-			constructor({ name, description, cost }) {
+			constructor({ name, description, cost, image }) {
 				this.name = name;
 				this.description = description;
 				this.cost = cost;
+				this.image = image;
 			}
 
 			// Polymorphic method
@@ -54,8 +55,8 @@
 
 		// Inheritance: Production Units (Repeatable)
 		class ProductionUnit extends Upgrade {
-			constructor({ name, description, baseCost, bonus }) {
-				super({ name, description, cost: baseCost });
+			constructor({ name, description, baseCost, bonus, image }) {
+				super({ name, description, cost: baseCost, image });
 				this.baseCost = baseCost;
 				this.bonus = bonus;
 				this.count = 0;
@@ -84,8 +85,8 @@
 
 		// Inheritance: Special Upgrades (One-time)
 		class SpecialUpgrade extends Upgrade {
-			constructor({ name, description, cost, effectType, effectValue }) {
-				super({ name, description, cost });
+			constructor({ name, description, cost, effectType, effectValue, image }) {
+				super({ name, description, cost, image });
 				this.effectType = effectType; // 'click' or 'multiplier'
 				this.effectValue = effectValue;
 				this.purchased = false;
@@ -135,24 +136,24 @@
 
 			createProductionUnits() {
 				return [
-					new ProductionUnit({ name: 'Pepe Pebble', description: '+0.1 CPS', baseCost: 15, bonus: 0.1 }),
-					new ProductionUnit({ name: 'Pepe Bakery', description: '+1 CPS', baseCost: 100, bonus: 1 }),
-					new ProductionUnit({ name: 'Frog Farm', description: '+8 CPS', baseCost: 1100, bonus: 8 }),
-					new ProductionUnit({ name: 'Lilypad Lab', description: '+47 CPS', baseCost: 12000, bonus: 47 }),
-					new ProductionUnit({ name: 'Swamp Syndicate', description: '+260 CPS', baseCost: 130000, bonus: 260 }),
-					new ProductionUnit({ name: 'Meme Factory', description: '+1400 CPS', baseCost: 1400000, bonus: 1400 }),
-					new ProductionUnit({ name: 'Green Empire', description: '+7800 CPS', baseCost: 20000000, bonus: 7800 }),
-					new ProductionUnit({ name: 'Galactic Gulp', description: '+44000 CPS', baseCost: 330000000, bonus: 44000 }),
+					new ProductionUnit({ name: 'Pepe Pebble', description: '+0.1 CPS', baseCost: 15, bonus: 0.1, image: 'Pepe.png' }),
+					new ProductionUnit({ name: 'Pepe Bakery', description: '+1 CPS', baseCost: 100, bonus: 1, image: 'Pepe (1).png' }),
+					new ProductionUnit({ name: 'Frog Farm', description: '+8 CPS', baseCost: 1100, bonus: 8, image: 'Parinaz.webp' }),
+					new ProductionUnit({ name: 'Lilypad Lab', description: '+47 CPS', baseCost: 12000, bonus: 47, image: 'mister.webp' }),
+					new ProductionUnit({ name: 'Swamp Syndicate', description: '+260 CPS', baseCost: 130000, bonus: 260, image: '351912467071492-3.webp' }),
+					new ProductionUnit({ name: 'Meme Factory', description: '+1400 CPS', baseCost: 1400000, bonus: 1400, image: '18366310974687406.png' }),
+					new ProductionUnit({ name: 'Green Empire', description: '+7800 CPS', baseCost: 20000000, bonus: 7800, image: 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif' }),
+					new ProductionUnit({ name: 'Galactic Gulp', description: '+44000 CPS', baseCost: 330000000, bonus: 44000, image: 'Pepe.webp' }),
 				];
 			}
 
 			createSpecialUpgrades() {
 				return [
-					new SpecialUpgrade({ name: 'Meme-Powered Clicks', description: '+10 per click', cost: 500, effectType: 'click', effectValue: 10 }),
-					new SpecialUpgrade({ name: 'Pepe\'s Auto-Baker', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05 }),
-					new SpecialUpgrade({ name: 'Rare Pepe Vat', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50 }),
-					new SpecialUpgrade({ name: 'The Great Frog-mony', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20 }),
-					new SpecialUpgrade({ name: 'Intergalactic Pepe-Sliver', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000 }),
+					new SpecialUpgrade({ name: 'Meme-Powered Clicks', description: '+10 per click', cost: 500, effectType: 'click', effectValue: 10, image: 'cookie.png' }),
+					new SpecialUpgrade({ name: 'Pepe\'s Auto-Baker', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05, image: 'nugget.png' }),
+					new SpecialUpgrade({ name: 'Rare Pepe Vat', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50, image: 'Join The Dark Side.jpg' }),
+					new SpecialUpgrade({ name: 'The Great Frog-mony', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20, image: 'すし.png' }),
+					new SpecialUpgrade({ name: 'Intergalactic Pepe-Sliver', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000, image: 'Pepe.webp' }),
 				];
 			}
 
@@ -511,16 +512,6 @@
 			}
 
 			createUpgradeButton(item, index, action) {
-				const upgradeImages = [
-					'Pepe.webp', 
-					'Parinaz.webp', 
-					'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif', 
-					'mister.webp',
-					'Pepe.png',
-					'Pepe (1).png',
-					'351912467071492-3.webp',
-					'18366310974687406.png'
-				];
 				const upgradeColors = ['blue', 'red', 'green', 'yellow', 'purple', 'orange'];
 				
 				const cost = item instanceof ProductionUnit ? item.getCurrentCost() : item.cost;
@@ -553,7 +544,7 @@
 				button.innerHTML = `
 					<span class="upgrade-main">
 						<span class="upgrade-icon" aria-hidden="true">
-							<img class="upgrade-image" src="${upgradeImages[index % upgradeImages.length]}" alt="">
+							<img class="upgrade-image" src="${item.image}" alt="">
 						</span>
 						<span class="upgrade-text">
 							<span class="upgrade-name">${item.name}</span>
