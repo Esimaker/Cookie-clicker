@@ -118,6 +118,7 @@
 				this.themeKey = 'pepe-clicker-theme';
 				this.cookie = new Cookie();
 				this.cookieRotation = 0;
+				this.renderedPebbleCount = -1;
 				
 				this.productionUnits = this.createProductionUnits();
 				this.upgrades = this.createSpecialUpgrades();
@@ -163,7 +164,8 @@
 					upgradeCount: this.root.querySelector('[data-display="upgrade-count"]'),
 					productionCount: this.root.querySelector('[data-display="production-count"]'),
 					upgrades: this.root.querySelector('[data-display="upgrades"]'),
-					production: this.root.querySelector('[data-display="production"]')
+					production: this.root.querySelector('[data-display="production"]'),
+					pebbleOrbit: this.root.querySelector('[data-display="pebble-orbit"]')
 				};
 			}
 
@@ -464,6 +466,32 @@
 				
 				this.renderUpgrades();
 				this.renderProduction();
+				this.renderPebbleOrbit();
+			}
+
+			renderPebbleOrbit() {
+				const count = this.productionUnits[0].count;
+				if (count === this.renderedPebbleCount) return;
+
+				this.renderedPebbleCount = count;
+				const stage = this.displays.pebbleOrbit.parentElement;
+				const button = stage.querySelector('.cookie-button');
+				const stageBounds = stage.getBoundingClientRect();
+				const buttonBounds = button.getBoundingClientRect();
+				const radius = Math.min(buttonBounds.width / 2 + 26, stageBounds.width / 2 - 22);
+				const visibleCount = Math.min(count, 24);
+				const pebbles = Array.from({ length: visibleCount }, (_, index) => {
+					const angle = (index / visibleCount) * Math.PI * 2 - Math.PI / 2;
+					const image = document.createElement('img');
+					image.className = 'pebble-orbit-image';
+					image.src = 'Pepe.webp';
+					image.alt = '';
+					image.style.left = `${(stageBounds.width / 2 + Math.cos(angle) * radius) / stageBounds.width * 100}%`;
+					image.style.top = `${(stageBounds.height / 2 + Math.sin(angle) * radius) / stageBounds.height * 100}%`;
+					image.style.setProperty('--pebble-delay', `${index * -0.12}s`);
+					return image;
+				});
+				this.displays.pebbleOrbit.replaceChildren(...pebbles);
 			}
 
 			renderUpgrades() {
