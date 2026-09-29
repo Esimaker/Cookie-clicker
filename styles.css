@@ -335,6 +335,12 @@ button {
 	align-items: center;
 	justify-content: space-between;
 	padding: 9px 10px;
+	border: 1px solid var(--upgrade-color, var(--line));
+	border-left-width: 5px;
+	border-radius: 12px;
+	background: transparent;
+	text-align: left;
+	transition: border-color 120ms ease, background 120ms ease;
 }
 
 .upgrade[data-upgrade-color="blue"] {
@@ -354,7 +360,17 @@ button {
 
 .upgrade:hover:not(:disabled) {
 	border-color: var(--green);
-	background: #f4faef;
+	background: radial-gradient(circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(255, 255, 255, 0.92), #f4faef 55%);
+	box-shadow: 0 8px 22px color-mix(in srgb, var(--upgrade-color) 25%, transparent);
+}
+
+.upgrade:active:not(:disabled) {
+	scale: 0.97;
+}
+
+.upgrade:focus-visible {
+	outline: 3px solid var(--green);
+	outline-offset: 3px;
 }
 
 .upgrade.is-available {
@@ -362,9 +378,36 @@ button {
 	animation: upgrade-ready 1.8s ease-in-out infinite;
 }
 
+.upgrade.is-purchased {
+	animation: upgrade-purchase 650ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 @keyframes upgrade-ready {
-	0%, 100% { transform: translateY(0); }
-	50% { transform: translateY(-2px); }
+	0%, 100% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--upgrade-color) 22%, transparent), 0 8px 18px color-mix(in srgb, var(--upgrade-color) 20%, transparent); }
+	50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--upgrade-color) 28%, transparent), 0 10px 22px color-mix(in srgb, var(--upgrade-color) 26%, transparent); }
+}
+
+@keyframes upgrade-purchase {
+	0% { scale: 0.94; opacity: 0.5; box-shadow: 0 0 0 0 color-mix(in srgb, var(--upgrade-color) 60%, transparent); }
+	45% { scale: 1.04; opacity: 1; box-shadow: 0 0 0 7px color-mix(in srgb, var(--upgrade-color) 30%, transparent), 0 12px 26px color-mix(in srgb, var(--upgrade-color) 35%, transparent); }
+	100% { scale: 1; opacity: 0.5; box-shadow: 0 0 0 0 transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.upgrade {
+		transition: none;
+		will-change: auto;
+	}
+
+	.upgrade.is-available {
+		animation: none;
+	}
+
+	.upgrade.is-purchased {
+		animation: none;
+		border-color: var(--green);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 30%, transparent);
+	}
 }
 
 body.dark-mode .upgrade:hover:not(:disabled) {
