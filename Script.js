@@ -3,21 +3,25 @@
 			#total = 0;
 			#perClick = 1;
 			#perSecond = 0;
+			#cpsMultiplier = 1;
 
 			get total() { return this.#total; }
 			get perClick() { return this.#perClick; }
-			get perSecond() { return this.#perSecond; }
+			get perSecond() { return (this.#perSecond * this.#cpsMultiplier); }
+			get rawPerSecond() { return this.#perSecond; }
+			get cpsMultiplier() { return this.#cpsMultiplier; }
 
 			set total(val) { this.#total = val; }
 			set perClick(val) { this.#perClick = val; }
 			set perSecond(val) { this.#perSecond = val; }
+			set cpsMultiplier(val) { this.#cpsMultiplier = val; }
 
 			click() {
 				this.#total += this.#perClick;
 			}
 
 			addPassiveIncome() {
-				this.#total += this.#perSecond;
+				this.#total += this.perSecond;
 			}
 
 			canAfford(cost) {
@@ -40,6 +44,50 @@
 				this.name = name;
 				this.description = description;
 				this.cost = cost;
+			}
+
+			// Polymorphic method
+			applyEffect(cookie) {
+				throw new Error("applyEffect() must be implemented by subclass");
+			}
+		}
+
+		// Inheritance: Production Units (Repeatable)
+		class ProductionUnit extends Upgrade {
+			constructor({ name, description, baseCost, bonus }) {
+				super({ name, description, cost: baseCost });
+				this.baseCost = baseCost;
+				this.bonus = bonus;
+				this.count = 0;
+				this.maxCount = 100;
+			}
+
+			getCurrentCost() {
+				return Math.floor(this.baseCost * Math.pow(1.15, this.count));
+			}
+
+			purchase(cookie) {
+				const cost = this.getCurrentCost();
+				if (this.count >= this.maxCount || !cookie.spend(cost)) {
+					return false;
+				}
+
+				this.count++;
+				this.applyEffect(cookie);
+				return true;
+			}
+
+			applyEffect(cookie) {
+				cookie.perSecond = cookie.rawPerSecond + this.bonus;
+			}
+		}
+
+		// Inheritance: Special Upgrades (One-time)
+		class SpecialUpgrade extends Upgrade {
+			constructor({ name, description, cost, effectType, effectValue }) {
+				super({ name, description, cost });
+				this.effectType = effectType; // 'click' or 'multiplier'
+				this.effectValue = effectValue;
 				this.purchased = false;
 			}
 
@@ -53,32 +101,12 @@
 				return true;
 			}
 
-			// Polymorphic method
 			applyEffect(cookie) {
-				throw new Error("applyEffect() must be implemented by subclass");
-			}
-		}
-
-		// Inheritance: Specific upgrade types
-		class ClickUpgrade extends Upgrade {
-			constructor({ name, description, cost, bonus }) {
-				super({ name, description, cost });
-				this.bonus = bonus;
-			}
-
-			applyEffect(cookie) {
-				cookie.perClick += this.bonus;
-			}
-		}
-
-		class PassiveUpgrade extends Upgrade {
-			constructor({ name, description, cost, bonus }) {
-				super({ name, description, cost });
-				this.bonus = bonus;
-			}
-
-			applyEffect(cookie) {
-				cookie.perSecond += this.bonus;
+				if (this.effectType === 'click') {
+					cookie.perClick += this.effectValue;
+				} else if (this.effectType === 'multiplier') {
+					cookie.cpsMultiplier += this.effectValue;
+				}
 			}
 		}
 
@@ -90,7 +118,10 @@
 				this.themeKey = 'pepe-clicker-theme';
 				this.cookie = new Cookie();
 				this.cookieRotation = 0;
-				this.upgrades = this.createUpgrades();
+				
+				this.productionUnits = this.createProductionUnits();
+				this.upgrades = this.createSpecialUpgrades();
+				
 				this.displays = this.findDisplays();
 				this.audioContext = null;
 				this.loadGame();
@@ -100,26 +131,26 @@
 				this.startPassiveIncome();
 			}
 
-			createUpgrades() {
+			createProductionUnits() {
 				return [
-					new ClickUpgrade({
-						name: 'Extra sprinkles',
-						description: '+1 cookie per click',
-						cost: 25,
-						bonus: 1
-					}),
-					new PassiveUpgrade({
-						name: 'Pepe bakery',
-						description: '+1 cookie per second',
-						cost: 75,
-						bonus: 1
-					}),
-					new ClickUpgrade({
-						name: 'Golden oven',
-						description: '+5 cookies per click',
-						cost: 250,
-						bonus: 5
-					})
+					new ProductionUnit({ name: 'Pepe Pebble', description: '+0.1 CPS', baseCost: 15, bonus: 0.1 }),
+					new ProductionUnit({ name: 'Pepe Bakery', description: '+1 CPS', baseCost: 100, bonus: 1 }),
+					new ProductionUnit({ name: 'Frog Farm', description: '+8 CPS', baseCost: 1100, bonus: 8 }),
+					new ProductionUnit({ name: 'Lilypad Lab', description: '+47 CPS', baseCost: 12000, bonus: 47 }),
+					new ProductionUnit({ name: 'Swamp Syndicate', description: '+260 CPS', baseCost: 130000, bonus: 260 }),
+					new ProductionUnit({ name: 'Meme Factory', description: '+1400 CPS', baseCost: 1400000, bonus: 1400 }),
+					new ProductionUnit({ name: 'Green Empire', description: '+7800 CPS', baseCost: 20000000, bonus: 7800 }),
+					new ProductionUnit({ name: 'Galactic Gulp', description: '+44000 CPS', baseCost: 330000000, bonus: 44000 }),
+				];
+			}
+
+			createSpecialUpgrades() {
+				return [
+					new SpecialUpgrade({ name: 'Stronger Fingers', description: '+10 per click', cost: 500, effectType: 'click', effectValue: 10 }),
+					new SpecialUpgrade({ name: 'Automatic Stirrer', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05 }),
+					new SpecialUpgrade({ name: 'Industrial Bowls', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50 }),
+					new SpecialUpgrade({ name: 'Froggy Synergy', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20 }),
+					new SpecialUpgrade({ name: 'Cosmic Cookie', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000 }),
 				];
 			}
 
@@ -129,7 +160,9 @@
 					perClick: this.root.querySelector('[data-display="per-click"]'),
 					perSecond: this.root.querySelector('[data-display="per-second"]'),
 					upgradeCount: this.root.querySelector('[data-display="upgrade-count"]'),
-					upgrades: this.root.querySelector('[data-display="upgrades"]')
+					productionCount: this.root.querySelector('[data-display="production-count"]'),
+					upgrades: this.root.querySelector('[data-display="upgrades"]'),
+					production: this.root.querySelector('[data-display="production"]')
 				};
 			}
 
@@ -137,8 +170,10 @@
 				const isDark = localStorage.getItem(this.themeKey) === 'dark';
 				document.body.classList.toggle('dark-mode', isDark);
 				const themeButton = this.root.parentElement.querySelector('[data-action="theme"]');
-				themeButton.textContent = isDark ? 'Light mode' : 'Dark mode';
-				themeButton.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+				if (themeButton) {
+					themeButton.textContent = isDark ? 'Light mode' : 'Dark mode';
+					themeButton.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+				}
 			}
 
 			toggleTheme() {
@@ -151,29 +186,39 @@
 				const save = {
 					total: this.cookie.total,
 					perClick: this.cookie.perClick,
-					perSecond: this.cookie.perSecond,
-					purchasedUpgrades: this.upgrades.map((upgrade) => upgrade.purchased)
+					perSecond: this.cookie.rawPerSecond,
+					cpsMultiplier: this.cookie.cpsMultiplier,
+					purchasedUpgrades: this.upgrades.map((u) => u.purchased),
+					productionCounts: this.productionUnits.map((u) => u.count)
 				};
 				localStorage.setItem(this.storageKey, JSON.stringify(save));
 				const saveButton = this.root.parentElement.querySelector('[data-action="save"]');
-				saveButton.textContent = 'Saved!';
-				window.setTimeout(() => { saveButton.textContent = 'Save game'; }, 1200);
+				if (saveButton) {
+					saveButton.textContent = 'Saved!';
+					window.setTimeout(() => { saveButton.textContent = 'Save game'; }, 1200);
+				}
 			}
 
 			loadGame() {
 				const savedGame = localStorage.getItem(this.storageKey);
-				if (!savedGame) {
-					return;
-				}
+				if (!savedGame) return;
 
 				try {
 					const save = JSON.parse(savedGame);
 					this.cookie.total = Number(save.total) || 0;
 					this.cookie.perClick = Number(save.perClick) || 1;
 					this.cookie.perSecond = Number(save.perSecond) || 0;
+					this.cookie.cpsMultiplier = Number(save.cpsMultiplier) || 1;
+					
 					(save.purchasedUpgrades || []).forEach((purchased, index) => {
 						if (purchased && this.upgrades[index]) {
 							this.upgrades[index].purchased = true;
+						}
+					});
+
+					(save.productionCounts || []).forEach((count, index) => {
+						if (this.productionUnits[index]) {
+							this.productionUnits[index].count = count;
 						}
 					});
 				} catch (error) {
@@ -184,33 +229,16 @@
 			bindEvents() {
 				this.root.parentElement.addEventListener('click', (event) => {
 					const actionTarget = event.target.closest('[data-action]');
-					if (!actionTarget) {
-						return;
-					}
+					if (!actionTarget) return;
 
-					if (actionTarget.dataset.action === 'click-cookie') {
-						this.handleCookieClick(actionTarget, event);
-					}
-
-					if (actionTarget.dataset.action === 'brand-sound') {
-						this.playBrandSound();
-					}
-
-					if (actionTarget.dataset.action === 'buy-upgrade') {
-						this.buyUpgrade(Number(actionTarget.dataset.upgradeIndex));
-					}
-
-					if (actionTarget.dataset.action === 'reset') {
-						this.reset();
-					}
-
-					if (actionTarget.dataset.action === 'save') {
-						this.saveGame();
-					}
-
-					if (actionTarget.dataset.action === 'theme') {
-						this.toggleTheme();
-					}
+					const action = actionTarget.dataset.action;
+					if (action === 'click-cookie') this.handleCookieClick(actionTarget, event);
+					if (action === 'brand-sound') this.playBrandSound();
+					if (action === 'buy-upgrade') this.buyUpgrade(Number(actionTarget.dataset.upgradeIndex));
+					if (action === 'buy-production') this.buyProduction(Number(actionTarget.dataset.upgradeIndex));
+					if (action === 'reset') this.reset();
+					if (action === 'save') this.saveGame();
+					if (action === 'theme') this.toggleTheme();
 				});
 			}
 
@@ -242,9 +270,7 @@
 
 			playCroakSound() {
 				const AudioCtor = window.AudioContext || window.webkitAudioContext;
-				if (!AudioCtor) {
-					return;
-				}
+				if (!AudioCtor) return;
 
 				this.audioContext = this.audioContext || new AudioCtor();
 				const context = this.audioContext;
@@ -271,18 +297,13 @@
 					this.brandSound = new Audio('freesound_community-yay-6120.mp3');
 					this.brandSound.preload = 'auto';
 				}
-
 				this.brandSound.currentTime = 0;
-				this.brandSound.play().catch(() => {
-					// Ignore play() restrictions until a user interaction has been accepted.
-				});
+				this.brandSound.play().catch(() => {});
 			}
 
 			playUpgradeSound() {
 				const AudioCtor = window.AudioContext || window.webkitAudioContext;
-				if (!AudioCtor) {
-					return;
-				}
+				if (!AudioCtor) return;
 
 				this.audioContext = this.audioContext || new AudioCtor();
 				const context = this.audioContext;
@@ -314,6 +335,13 @@
 				}
 			}
 
+			buyProduction(index) {
+				if (this.productionUnits[index].purchase(this.cookie)) {
+					this.playUpgradeSound();
+					this.render();
+				}
+			}
+
 			startPassiveIncome() {
 				window.setInterval(() => {
 					if (this.cookie.perSecond > 0) {
@@ -327,7 +355,8 @@
 				localStorage.removeItem(this.storageKey);
 				this.cookie = new Cookie();
 				this.cookieRotation = 0;
-				this.upgrades = this.createUpgrades();
+				this.productionUnits = this.createProductionUnits();
+				this.upgrades = this.createSpecialUpgrades();
 				this.root.querySelector('.cookie-image').style.setProperty('--cookie-rotation', '0deg');
 				this.render();
 			}
@@ -335,39 +364,71 @@
 			render() {
 				this.displays.score.textContent = Math.floor(this.cookie.total).toLocaleString();
 				this.displays.perClick.textContent = this.cookie.perClick;
-				this.displays.perSecond.textContent = this.cookie.perSecond;
-				this.displays.upgradeCount.textContent = `${this.upgrades.filter((upgrade) => upgrade.purchased).length}/${this.upgrades.length}`;
+				this.displays.perSecond.textContent = this.cookie.perSecond.toFixed(1);
+				
+				const totalUpgrades = this.upgrades.filter(u => u.purchased).length;
+				this.displays.upgradeCount.textContent = `${totalUpgrades}/${this.upgrades.length}`;
+				
+				const totalProduction = this.productionUnits.reduce((sum, u) => sum + u.count, 0);
+				this.displays.productionCount.textContent = `${totalProduction}/800`; // 8 units * 100
+				
 				this.renderUpgrades();
+				this.renderProduction();
 			}
 
 			renderUpgrades() {
 				this.displays.upgrades.replaceChildren();
-
 				this.upgrades.forEach((upgrade, index) => {
-					const button = document.createElement('button');
-					const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif'];
-					const upgradeColors = ['blue', 'red', 'green'];
-					const isAvailable = !upgrade.purchased && this.cookie.canAfford(upgrade.cost);
-					button.type = 'button';
-					button.className = `upgrade${isAvailable ? ' is-available' : ''}`;
-					button.dataset.upgradeColor = upgradeColors[index];
-					button.dataset.action = 'buy-upgrade';
-					button.dataset.upgradeIndex = index;
-					button.disabled = upgrade.purchased || !this.cookie.canAfford(upgrade.cost);
-					button.innerHTML = `
-						<span class="upgrade-main">
-							<span class="upgrade-icon" aria-hidden="true">
-								<img class="upgrade-image" src="${upgradeImages[index]}" alt="">
-							</span>
-							<span class="upgrade-text">
-								<span class="upgrade-name">${upgrade.name}</span>
-								<span class="upgrade-description">${upgrade.purchased ? 'Purchased' : upgrade.description}</span>
-							</span>
-						</span>
-						<span class="upgrade-cost">${upgrade.purchased ? '✓' : upgrade.cost}</span>
-					`;
+					const button = this.createUpgradeButton(upgrade, index, 'buy-upgrade');
 					this.displays.upgrades.appendChild(button);
 				});
+			}
+
+			renderProduction() {
+				this.displays.production.replaceChildren();
+				this.productionUnits.forEach((unit, index) => {
+					const button = this.createUpgradeButton(unit, index, 'buy-production');
+					this.displays.production.appendChild(button);
+				});
+			}
+
+			createUpgradeButton(item, index, action) {
+				const upgradeImages = ['Pepe.webp', 'Parinaz.webp', 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif', 'Pepe.webp', 'Parinaz.webp', 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif', 'Pepe.webp', 'Parinaz.webp'];
+				const upgradeColors = ['blue', 'red', 'green', 'blue', 'red', 'green', 'blue', 'red'];
+				
+				const cost = item instanceof ProductionUnit ? item.getCurrentCost() : item.cost;
+				const isAvailable = (item instanceof ProductionUnit ? item.count < 100 : !item.purchased) && this.cookie.canAfford(cost);
+				
+				const button = document.createElement('button');
+				button.type = 'button';
+				
+				// Apply different classes based on type for styling
+				const typeClass = item instanceof ProductionUnit ? 'unit-button' : 'special-button';
+				button.className = `upgrade ${typeClass}${isAvailable ? ' is-available' : ''}`;
+				
+				button.dataset.upgradeColor = upgradeColors[index % 3];
+				button.dataset.action = action;
+				button.dataset.upgradeIndex = index;
+				
+				const disabled = (item instanceof ProductionUnit ? item.count >= 100 : item.purchased) || !this.cookie.canAfford(cost);
+				button.disabled = disabled;
+				
+				const label = item instanceof ProductionUnit ? `x${item.count}` : (item.purchased ? '✓' : cost);
+				const desc = (item instanceof ProductionUnit && item.count >= 100) ? 'MAXED' : (item instanceof ProductionUnit ? item.description : (item.purchased ? 'Purchased' : item.description));
+
+				button.innerHTML = `
+					<span class="upgrade-main">
+						<span class="upgrade-icon" aria-hidden="true">
+							<img class="upgrade-image" src="${upgradeImages[index % 3]}" alt="">
+						</span>
+						<span class="upgrade-text">
+							<span class="upgrade-name">${item.name}</span>
+							<span class="upgrade-description">${desc}</span>
+						</span>
+					</span>
+					<span class="upgrade-cost">${label}</span>
+				`;
+				return button;
 			}
 		}
 
