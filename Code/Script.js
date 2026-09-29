@@ -136,24 +136,24 @@
 
 			createProductionUnits() {
 				return [
-					new ProductionUnit({ name: 'Pepe Pebble', description: '+0.1 CPS', baseCost: 15, bonus: 0.1, image: 'Pepe.png' }),
-					new ProductionUnit({ name: 'Pepe Bakery', description: '+1 CPS', baseCost: 100, bonus: 1, image: 'Pepe (1).png' }),
-					new ProductionUnit({ name: 'Frog Farm', description: '+8 CPS', baseCost: 1100, bonus: 8, image: 'Parinaz.webp' }),
-					new ProductionUnit({ name: 'Lilypad Lab', description: '+47 CPS', baseCost: 12000, bonus: 47, image: 'mister.webp' }),
-					new ProductionUnit({ name: 'Swamp Syndicate', description: '+260 CPS', baseCost: 130000, bonus: 260, image: '351912467071492-3.webp' }),
-					new ProductionUnit({ name: 'Meme Factory', description: '+1400 CPS', baseCost: 1400000, bonus: 1400, image: '18366310974687406.png' }),
-					new ProductionUnit({ name: 'Green Empire', description: '+7800 CPS', baseCost: 20000000, bonus: 7800, image: 'Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif' }),
-					new ProductionUnit({ name: 'Galactic Gulp', description: '+44000 CPS', baseCost: 330000000, bonus: 44000, image: 'Pepe.webp' }),
+					new ProductionUnit({ name: 'Pepe Pebble', description: '+0.1 CPS', baseCost: 15, bonus: 0.1, image: '../Images/Pepe.png' }),
+					new ProductionUnit({ name: 'Pepe Bakery', description: '+1 CPS', baseCost: 100, bonus: 1, image: '../Images/Pepe (1).png' }),
+					new ProductionUnit({ name: 'Frog Farm', description: '+8 CPS', baseCost: 1100, bonus: 8, image: '../Images/Parinaz.webp' }),
+					new ProductionUnit({ name: 'Lilypad Lab', description: '+47 CPS', baseCost: 12000, bonus: 47, image: '../Images/mister.webp' }),
+					new ProductionUnit({ name: 'Swamp Syndicate', description: '+260 CPS', baseCost: 130000, bonus: 260, image: '../Images/351912467071492-3.webp' }),
+					new ProductionUnit({ name: 'Meme Factory', description: '+1400 CPS', baseCost: 1400000, bonus: 1400, image: '../Images/18366310974687406.png' }),
+					new ProductionUnit({ name: 'Green Empire', description: '+7800 CPS', baseCost: 20000000, bonus: 7800, image: '../Images/Pepe Wink Pepe GIF - Pepe Wink Pepe Wink - Discover & Share GIFs.gif' }),
+					new ProductionUnit({ name: 'Galactic Gulp', description: '+44000 CPS', baseCost: 330000000, bonus: 44000, image: '../Images/Pepe.webp' }),
 				];
 			}
 
 			createSpecialUpgrades() {
 				return [
-					new SpecialUpgrade({ name: 'Meme-Powered Clicks', description: '+10 per click', cost: 500, effectType: 'click', effectValue: 10, image: 'cookie.png' }),
-					new SpecialUpgrade({ name: 'Pepe\'s Auto-Baker', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05, image: 'nugget.png' }),
-					new SpecialUpgrade({ name: 'Rare Pepe Vat', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50, image: 'Join The Dark Side.jpg' }),
-					new SpecialUpgrade({ name: 'The Great Frog-mony', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20, image: 'すし.png' }),
-					new SpecialUpgrade({ name: 'Intergalactic Pepe-Sliver', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000, image: 'Pepe.webp' }),
+					new SpecialUpgrade({ name: 'Meme-Powered Clicks', description: '+10 per click', cost: 500, effectType: 'click', effectValue: 10, image: '../Images/cookie.png' }),
+					new SpecialUpgrade({ name: 'Pepe\'s Auto-Baker', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05, image: '../Images/nugget.png' }),
+					new SpecialUpgrade({ name: 'Rare Pepe Vat', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50, image: '../Images/Join The Dark Side.jpg' }),
+					new SpecialUpgrade({ name: 'The Great Frog-mony', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20, image: '../Images/すし.png' }),
+					new SpecialUpgrade({ name: 'Intergalactic Pepe-Sliver', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000, image: '../Images/Pepe.webp' }),
 				];
 			}
 
@@ -363,7 +363,7 @@
 
 			playBrandSound() {
 				if (!this.brandSound) {
-					this.brandSound = new Audio('freesound_community-yay-6120.mp3');
+					this.brandSound = new Audio('../Sounds/freesound_community-yay-6120.mp3');
 					this.brandSound.preload = 'auto';
 				}
 				this.brandSound.currentTime = 0;
@@ -485,7 +485,7 @@
 					const angle = (index / visibleCount) * Math.PI * 2 - Math.PI / 2;
 					const image = document.createElement('img');
 					image.className = 'pebble-orbit-image';
-					image.src = 'Pepe.webp';
+					image.src = '../Images/Pepe.webp';
 					image.alt = '';
 					image.style.left = `${(stageBounds.width / 2 + Math.cos(angle) * radius) / stageBounds.width * 100}%`;
 					image.style.top = `${(stageBounds.height / 2 + Math.sin(angle) * radius) / stageBounds.height * 100}%`;
