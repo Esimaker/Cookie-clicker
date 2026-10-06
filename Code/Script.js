@@ -4,10 +4,11 @@
 			#perClick = 1;
 			#perSecond = 0;
 			#cpsMultiplier = 1;
+			#tempMultiplier = 1;
 
 			get total() { return this.#total; }
 			get perClick() { return this.#perClick; }
-			get perSecond() { return (this.#perSecond * this.#cpsMultiplier); }
+			get perSecond() { return (this.#perSecond * this.#cpsMultiplier * this.#tempMultiplier); }
 			get rawPerSecond() { return this.#perSecond; }
 			get cpsMultiplier() { return this.#cpsMultiplier; }
 
@@ -15,6 +16,13 @@
 			set perClick(val) { this.#perClick = val; }
 			set perSecond(val) { this.#perSecond = val; }
 			set cpsMultiplier(val) { this.#cpsMultiplier = val; }
+
+			setTempMultiplier(val, duration) {
+				this.#tempMultiplier = val;
+				window.setTimeout(() => {
+					this.#tempMultiplier = 1;
+				}, duration);
+			}
 
 			click() {
 				this.#total += this.#perClick;
@@ -111,6 +119,73 @@
 			}
 		}
 
+		// Golden Pepe Effects - Abstraction & Polymorphism
+		class GoldenPepeEffect {
+			constructor(name, duration) {
+				this.name = name;
+				this.duration = duration;
+			}
+			apply(cookie) {
+				throw new Error("apply() must be implemented by subclass");
+			}
+		}
+
+		class FrenzyEffect extends GoldenPepeEffect {
+			constructor() { super('Frenzy!', 15000); }
+			apply(cookie) {
+				cookie.setTempMultiplier(7, this.duration);
+				return `FRENZY! Production x7 for 15s!`;
+			}
+		}
+
+		class CookieBurstEffect extends GoldenPepeEffect {
+			constructor() { super('Cookie Burst', 0); }
+			apply(cookie) {
+				const bonus = Math.max(100, Math.floor(cookie.perSecond * 60));
+				cookie.total += bonus;
+				return `BURST! You got ${bonus.toLocaleString()} cookies!`;
+			}
+		}
+
+		class GoldenPepe {
+			constructor(game) {
+				this.game = game;
+				this.image = '../Images/Goldenpepe.png';
+			}
+
+			spawn() {
+				const el = document.createElement('img');
+				el.src = this.image;
+				el.className = 'golden-pepe';
+				
+				// Random position
+				const x = Math.random() * (window.innerWidth - 80);
+				const y = Math.random() * (window.innerHeight - 80);
+				el.style.left = `${x}px`;
+				el.style.top = `${y}px`;
+
+				el.onclick = () => {
+					this.triggerEffect();
+					el.remove();
+				};
+
+				document.body.appendChild(el);
+				
+				// Despawn after 10 seconds if not clicked
+				window.setTimeout(() => el.remove(), 10000);
+			}
+
+			triggerEffect() {
+				const effects = [new FrenzyEffect(), new CookieBurstEffect()];
+				const effect = effects[Math.floor(Math.random() * effects.length)];
+				const message = effect.apply(this.game.cookie);
+				
+				// Visual feedback for the effect
+				this.game.showEffectMessage(message);
+				this.game.render();
+			}
+		}
+
 		// Game controller
 		class PepeClickerGame {
 			constructor(root) {
@@ -127,11 +202,13 @@
 				this.displays = this.findDisplays();
 				this.magneticUpgrade = null;
 				this.audioContext = null;
+				this.goldenPepe = new GoldenPepe(this);
 				this.loadGame();
 				this.bindEvents();
 				this.applyTheme();
 				this.render();
 				this.startPassiveIncome();
+				this.startGoldenPepeTimer();
 			}
 
 			createProductionUnits() {
@@ -433,6 +510,33 @@
 				flyout.addEventListener('animationend', () => flyout.remove(), { once: true });
 				document.body.appendChild(flyout);
 				window.setTimeout(() => flyout.remove(), 900);
+			}
+
+			showEffectMessage(message) {
+				const popup = document.createElement('div');
+				popup.className = 'click-pop';
+				popup.style.position = 'fixed';
+				popup.style.left = '50%';
+				popup.style.top = '40%';
+				popup.style.transform = 'translateX(-50%)';
+				popup.style.fontSize = '2rem';
+				popup.style.color = 'gold';
+				popup.style.textShadow = '0 0 10px black';
+				popup.style.zIndex = '1000';
+				popup.style.pointerEvents = 'none';
+				popup.textContent = message;
+				
+				document.body.appendChild(popup);
+				window.setTimeout(() => popup.remove(), 3000);
+			}
+
+			startGoldenPepeTimer() {
+				const spawn = () => {
+					this.goldenPepe.spawn();
+					const nextSpawn = Math.random() * (300000 - 60000) + 60000; // 1 to 5 minutes
+					window.setTimeout(spawn, nextSpawn);
+				};
+				window.setTimeout(spawn, 60000); // First spawn after 1 minute
 			}
 
 			startPassiveIncome() {
