@@ -230,7 +230,7 @@
 					new SpecialUpgrade({ name: 'Pepe\'s Auto-Baker', description: '+5% Total CPS', cost: 5000, effectType: 'multiplier', effectValue: 0.05, image: '../Images/nugget.png' }),
 					new SpecialUpgrade({ name: 'Rare Pepe Vat', description: '+50 per click', cost: 25000, effectType: 'click', effectValue: 50, image: '../Images/Join The Dark Side.jpg' }),
 					new SpecialUpgrade({ name: 'The Great Frog-mony', description: '+20% Total CPS', cost: 100000, effectType: 'multiplier', effectValue: 0.20, image: '../Images/すし.png' }),
-					new SpecialUpgrade({ name: 'Intergalactic Pepe-Sliver', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000, image: '../Images/Pepe.webp' }),
+					new SpecialUpgrade({ name: 'Intergalactic Pepe-Sliver', description: '+1000 per click', cost: 1000000, effectType: 'click', effectValue: 1000, image: '../apple.png' }),
 				];
 			}
 
