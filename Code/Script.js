@@ -46,7 +46,7 @@
 			}
 		}
 
-		// Upgrades - Base Class (Abstraction)
+		// Upgrades
 		class Upgrade {
 			constructor({ name, description, cost, image }) {
 				this.name = name;
@@ -61,7 +61,7 @@
 			}
 		}
 
-		// Inheritance: Production Units (Repeatable)
+		// Production Units (Repeatable)
 		class ProductionUnit extends Upgrade {
 			constructor({ name, description, baseCost, bonus, image }) {
 				super({ name, description, cost: baseCost, image });
@@ -91,7 +91,7 @@
 			}
 		}
 
-		// Inheritance: Special Upgrades (One-time)
+		// Special Upgrades (One-time)
 		class SpecialUpgrade extends Upgrade {
 			constructor({ name, description, cost, effectType, effectValue, image }) {
 				super({ name, description, cost, image });
@@ -119,7 +119,7 @@
 			}
 		}
 
-		// Golden Pepe Effects - Abstraction & Polymorphism
+		// Golden Pepe Effects
 		class GoldenPepeEffect {
 			constructor(name, duration) {
 				this.name = name;
@@ -635,7 +635,7 @@
 				const disabled = (item instanceof ProductionUnit ? item.count >= 100 : item.purchased) || !this.cookie.canAfford(cost);
 				button.disabled = disabled;
 				
-				// New logic for labels and descriptions to show costs clearly
+				// Labels and descriptions to show costs
 				let label, desc;
 				if (item instanceof ProductionUnit) {
 					label = item.count >= 100 ? 'MAX' : cost.toLocaleString();
